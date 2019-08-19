@@ -14,8 +14,8 @@
 #define PIN_CS2 23
 #define PIN_CS3 24
 
-#define PIN_KEYBOARD_COL 38
-#define PIN_KEYBOARD_ROW 46
+#define PIN_KEYBOARD_COL A8
+#define PIN_KEYBOARD_ROW A0
 
 enum Keys
 {
@@ -557,7 +557,9 @@ void loop()
           v = v * 8 + key - K_O0;
           break;
         case K_D0...K_D9:
-          v = v * 10 + key - K_D0;
+          v *= 10;
+          v -= v % 10;
+          v += key - K_D0;
           break;
         case K_H0...K_HF:
           v = v * 16 + key - K_H0;
