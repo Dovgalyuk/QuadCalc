@@ -175,11 +175,11 @@ void setup() {
 
   digitalWrite(PIN_RST, LOW);
 
-  delay(1000);
+  delay(100);
 
   digitalWrite(PIN_RST, HIGH);
 
-  delay(1000);
+  delay(100);
 
   //Serial.println(readStatus());
 
@@ -403,13 +403,20 @@ static void setupPage(uint8_t page)
     // y = 0
     sendCommand(part, 0x40 + 0);
   }
-}
-
-static void drawBin(uint8_t page, uint32_t v)
-{
-  setupPage(page);
   lineSeg = 0;
   lineX = 0;
+}
+
+static void drawSpace(uint32_t v)
+{
+  while (v--)
+  {
+    lineSend(0);
+  }
+}
+
+static void drawBin(uint32_t v)
+{
   uint32_t mask = 0x80000000;
   for (int i = 0 ; i < 32 ; ++i, mask >>= 1)
   {
@@ -420,18 +427,13 @@ static void drawBin(uint8_t page, uint32_t v)
     //lineSend(c);
     if ((i & 3) == 3)
     {
-      lineSend(0);
-      lineSend(0);
-      lineSend(0);
+      drawSpace(3);
     }
   }
 }
 
-static void drawOct(uint8_t page, uint32_t v)
+static void drawOct(uint32_t v)
 {
-  setupPage(page);
-  lineSeg = 0;
-  lineX = 0;
   int shift = 30;
   for (int i = 0 ; i < 11 ; ++i, shift -= 3)
   {
@@ -440,11 +442,8 @@ static void drawOct(uint8_t page, uint32_t v)
   }
 }
 
-static void drawDec(uint8_t page, uint32_t v)
+static void drawDec(uint32_t v)
 {
-  setupPage(page);
-  lineSeg = 0;
-  lineX = 0;
   int8_t d[10];
   for (int8_t i = 0 ; i < 10 ; ++i)
   {
@@ -455,11 +454,8 @@ static void drawDec(uint8_t page, uint32_t v)
     drawChar(d[i]);
 }
 
-static void drawHex(uint8_t page, uint32_t v)
+static void drawHex(uint32_t v)
 {
-  setupPage(page);
-  lineSeg = 0;
-  lineX = 0;
   int shift = 28;
   for (int i = 0 ; i < 8 ; ++i, shift -= 4)
   {
@@ -521,15 +517,38 @@ void loop()
   int8_t op = -1;
   while (true)
   {
-    drawBin(0, v);
-    drawOct(1, v);
-    drawDec(2, v);
-    drawHex(3, v);
-    drawBin(4, acc);
+    setupPage(0);
+    drawSpace(FONT_W + 3);
+    drawBin(acc);
+
+    setupPage(1);
+    drawSpace(FONT_W * 22 + 3 * 8);
+    drawOct(acc);
+    
+    setupPage(2);
+    drawSpace(FONT_W * 23 + 3 * 8);
+    drawDec(acc);
+    
+    setupPage(3);
+    drawSpace(FONT_W * 25 + 3 * 8);
+    drawHex(acc);
+    
+    setupPage(4);
     drawChar(getOpChar(op));
-    drawOct(5, acc);
-    drawDec(6, acc);
-    drawHex(7, acc);
+    drawSpace(3);
+    drawBin(v);
+    
+    setupPage(5);
+    drawSpace(FONT_W * 22 + 3 * 8);
+    drawOct(v);
+    
+    setupPage(6);
+    drawSpace(FONT_W * 23 + 3 * 8);
+    drawDec(v);
+    
+    setupPage(7);
+    drawSpace(FONT_W * 25 + 3 * 8);
+    drawHex(v);
 
     uint32_t lastKey = millis();
     while (lastKey + 200 > millis())
