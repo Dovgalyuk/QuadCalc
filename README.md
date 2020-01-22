@@ -16,3 +16,7 @@ Write low fuse bits from file low. It should contain single FF byte:
 Write high fuse bits from file high. It should contain single D8 byte:
 
     sudo avrdude -p m2560 -c usbtiny -U hfuse:w:high:r
+
+Write the firmware image:
+
+    sudo avrdude -p m2560 -c usbtiny -U flash:w:calc.ino.hex:i
