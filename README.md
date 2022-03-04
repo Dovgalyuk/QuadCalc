@@ -20,3 +20,7 @@ Write high fuse bits from file high. It should contain single D8 byte:
 Write the firmware image:
 
     sudo avrdude -p m2560 -c usbtiny -U flash:w:calc.ino.hex:i
+
+# Links
+
+MK61 hardware emulator: https://gitlab.com/vitasam/mk61s
