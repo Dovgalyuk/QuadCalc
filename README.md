@@ -23,4 +23,8 @@ Write the firmware image:
 
 # Links
 
-MK61 hardware emulator: https://gitlab.com/vitasam/mk61s
+* MK61 hardware emulator: https://gitlab.com/vitasam/mk61s
+* E-ink Pi: https://github.com/a8ksh4/paper-pi-handheld
+* Handheld Linux Terminal: https://hackaday.io/project/192152-handheld-linux-terminal
+* The Forth Deck: http://mynor.org/my4th
+
